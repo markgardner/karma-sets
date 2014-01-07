@@ -1,0 +1,23 @@
+{
+  "name": "karma-sets",
+  "version": "0.0.1",
+  "description": "Multi-Suite runner plugin for Karma",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/markgardner/karma-sets.git"
+  },
+  "keywords": [
+    "karma-plugin",
+    "karma-runner"
+  ],
+  "author": "Mark Gardner",
+  "license": "MIT",
+  "peerDependencies": {
+    "karma": ">=0.10"
+  },
+  "contributors": [ ]
+}
