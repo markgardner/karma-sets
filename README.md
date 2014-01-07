@@ -23,7 +23,7 @@ npm install karma-sets --save-dev
 // karma.conf.js
 module.exports = function(config) {
   config.set({
-    frameworks: ['mocha', sets']
+    frameworks: ['mocha', 'sets']
   });
 };
 ```
