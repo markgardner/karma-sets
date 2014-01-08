@@ -23,7 +23,17 @@ npm install karma-sets --save-dev
 // karma.conf.js
 module.exports = function(config) {
   config.set({
-    frameworks: ['mocha', 'sets']
+    frameworks: ['mocha', 'sets'],
+    sets: {
+      NamedSet1: [
+        'assets/js/Set1/*.js',
+        'assets/js/Set1/test/*.js'
+      ],
+      NamedSet2: [
+        'assets/js/Set2/*.js',
+        'assets/js/Set2/test/*.js'
+      ]
+    }
   });
 };
 ```
