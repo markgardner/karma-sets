@@ -9,7 +9,7 @@ function initSets(emitter, config, fileList, executor, logger, launcher, injecto
         singleRun = config.singleRun,
         basePath = config.basePath,
         sets = config.sets || {},
-        setKeys = config.set ? [ config.set ] : Object.keys(sets),
+        setKeys = typeof(config.set) === 'string' ? [ config.set ] : Object.keys(sets),
         setKeysIdx, set, setIdx,
         browserCount = 0, runIdx = 0, runAllPass = true, runTitle;
 
