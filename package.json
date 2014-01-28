@@ -1,6 +1,6 @@
 {
   "name": "karma-sets",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Multi-Suite runner plugin for Karma",
   "main": "index.js",
   "scripts": {

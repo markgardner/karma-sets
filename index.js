@@ -37,7 +37,7 @@ function initSets(emitter, config, fileList, executor, logger, launcher, injecto
                 filePromise = fileList.reload(newFiles, config.exclude);
 
             // Setup autoWatch like features for single sets.
-            if(config.set) {
+            if(typeof(config.set) === 'string') {
                 filePromise.then(function() {
                     // Swap config.files to hack in watch.
                     var origFiles = config.files;
