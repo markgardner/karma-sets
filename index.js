@@ -1,15 +1,16 @@
 var path = require('path'),
     karmaDir = path.join(process.cwd(), 'node_modules/karma'),
+    core_watcher = require(path.join(karmaDir, 'lib/watcher'));
     core_isUrlAbsolute = require(path.join(karmaDir, 'lib/helper')).isUrlAbsolute,
     core_createPatternObject = require(path.join(karmaDir, 'lib/config')).createPatternObject;
 
-function initSets(emitter, config, fileList, executor, logger, launcher) {
+function initSets(emitter, config, fileList, executor, logger, launcher, injector) {
     var log = logger.create('Karma-Sets'),
         singleRun = config.singleRun,
         basePath = config.basePath,
         sets = config.sets || {},
-        setKeys = Object.keys(sets), setKeysIdx, 
-        set, setIdx,
+        setKeys = config.set ? [ config.set ] : Object.keys(sets),
+        setKeysIdx, set, setIdx,
         browserCount = 0, runIdx = 0, runAllPass = true, runTitle;
 
     // Process set's file patterns.
@@ -32,9 +33,26 @@ function initSets(emitter, config, fileList, executor, logger, launcher) {
 
         if(runIdx < setKeys.length) {
             var key = runTitle = setKeys[runIdx++],
-                newFiles = config.files.concat(sets[key]);
+                newFiles = config.files.concat(sets[key]),
+                filePromise = fileList.reload(newFiles, config.exclude);
 
-            fileList.reload(newFiles, config.exclude);
+            // Setup autoWatch like features for single sets.
+            if(config.set) {
+                filePromise.then(function() {
+                    // Swap config.files to hack in watch.
+                    var origFiles = config.files;
+                    config.files = newFiles;
+
+                    injector.invoke(core_watcher.watch);
+
+                    config.files = origFiles;
+                });
+
+                emitter.on('file_list_modified', function() {
+                    log.info('List of files has changed, trying to execute');
+                    executor.schedule();
+                });
+            }
 
             executor.schedule();
         } else {
@@ -74,7 +92,7 @@ function initSets(emitter, config, fileList, executor, logger, launcher) {
     }
 }
 
-initSets.$inject = ['emitter', 'config', 'fileList', 'executor', 'logger', 'launcher'];
+initSets.$inject = ['emitter', 'config', 'fileList', 'executor', 'logger', 'launcher', 'injector'];
 
 // PUBLISH DI MODULE
 module.exports = {
