@@ -1,6 +1,6 @@
 {
   "name": "karma-sets",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Multi-Suite runner plugin for Karma",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "author": "Mark Gardner",
   "license": "MIT",
   "peerDependencies": {
-    "karma": ">=0.10"
+    "karma": ">=0.12"
   },
   "contributors": [ ]
 }

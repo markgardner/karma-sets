@@ -4,7 +4,7 @@ var path = require('path'),
     core_isUrlAbsolute = require(path.join(karmaDir, 'lib/helper')).isUrlAbsolute,
     core_createPatternObject = require(path.join(karmaDir, 'lib/config')).createPatternObject;
 
-function initSets(emitter, config, fileList, executor, logger, launcher, injector) {
+function initSets(emitter, config, fileList, executor, logger, launcher, injector, webServer, socketServer, done) {
     var log = logger.create('Karma-Sets'),
         singleRun = config.singleRun,
         basePath = config.basePath,
@@ -56,10 +56,26 @@ function initSets(emitter, config, fileList, executor, logger, launcher, injecto
 
             executor.schedule();
         } else {
-            // Reset single run after last set
-            config.singleRun = singleRun;
+            // Remove all disconnect events to prevent reconnect attempts
+            var sockets = socketServer.sockets.sockets;
+            Object.getOwnPropertyNames(sockets).forEach(function(key) {
+                sockets[key].removeAllListeners('disconnect');
+            });
 
-            results.exitCode = runAllPass ? 0 : 1;
+            // Trigger closing all browsers
+            emitter.emitAsync('exit').then(function() {
+                // shutdown the server...
+                // Don't bother waiting, will only work 1% of the time.
+                webServer.close();
+                webServer.removeAllListeners();
+
+                // shutdown socket.io flash transport, if defined
+                if (socketServer.flashPolicyServer) {
+                    socketServer.flashPolicyServer.close();
+                }
+
+                done(runAllPass ? 0 : 1);
+            });
         }
     }
 
@@ -92,7 +108,7 @@ function initSets(emitter, config, fileList, executor, logger, launcher, injecto
     }
 }
 
-initSets.$inject = ['emitter', 'config', 'fileList', 'executor', 'logger', 'launcher', 'injector'];
+initSets.$inject = ['emitter', 'config', 'fileList', 'executor', 'logger', 'launcher', 'injector', 'webServer', 'socketServer', 'done'];
 
 // PUBLISH DI MODULE
 module.exports = {
