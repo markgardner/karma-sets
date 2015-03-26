@@ -80,8 +80,8 @@ function initSets(emitter, config, fileList, executor, logger, launcher, injecto
         });
         emitter.on('browser_register', function(browser) {
           // Got to mark it as captured before we can check allCaptured.
-          if (browser.launchId) {
-            launcher.markCaptured(browser.launchId);
+          if (browser.id) {
+            launcher.markCaptured(browser.id);
           }
 
           // This will be the first set to kick off the tests.
