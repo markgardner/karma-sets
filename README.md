@@ -7,8 +7,8 @@ The easiest way is to keep `karma-sets` as a devDependency in your `package.json
 ```json
 {
   "devDependencies": {
-    "karma": "~0.10",
-    "karma-sets": "~0.0.1"
+    "karma": "^0.12.31",
+    "karma-sets": "^0.1.0"
   }
 }
 ```
