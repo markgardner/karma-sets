@@ -59,7 +59,9 @@ function initSets(emitter, config, fileList, executor, logger, launcher, injecto
             // Remove all disconnect events to prevent reconnect attempts
             var sockets = socketServer.sockets.sockets;
             Object.getOwnPropertyNames(sockets).forEach(function(key) {
-                sockets[key].removeAllListeners('disconnect');
+                if (key !== 'length') {
+                    sockets[key].removeAllListeners('disconnect');
+                }            
             });
 
             // Trigger closing all browsers
